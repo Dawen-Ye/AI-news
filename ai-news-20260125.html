@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI资讯聚合 - 每日更新</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .update-time {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        /* 分类导航 */
+        .categories {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-btn {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #555;
+        }
+
+        .category-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .category-btn.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 卡片容器 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 3rem;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background-color: #f0f0f0;
+        }
+
+        .card-content {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            align-self: flex-start;
+        }
+
+        .card-category.model {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .card-category.product {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .card-category.company {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #222;
+            line-height: 1.4;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 16px;
+            margin-top: auto;
+        }
+
+        .card-source {
+            font-weight: 600;
+            color: #555;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eaeaea;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .category-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .card-image {
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .categories {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-btn {
+                width: 100%;
+                max-width: 250px;
+                margin-bottom: 8px;
+            }
+        }
+
+        /* 空状态提示 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">AI资讯聚合</h1>
+            <p class="subtitle">每日更新AI领域最新动态，涵盖模型进展、产品创新与大厂动向</p>
+            <p class="update-time">更新日期: <span id="current-date">2026年01月25日</span> | 更新时间: 每天上午10:00</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="categories">
+            <button class="category-btn active" data-category="all">全部资讯</button>
+            <button class="category-btn" data-category="model">模型层</button>
+            <button class="category-btn" data-category="product">产品层</button>
+            <button class="category-btn" data-category="company">大厂动态</button>
+        </div>
+
+        <div class="cards-container" id="cards-container">
+            
+            <div class="card" data-category="model">
+                <img src="images/article_0_1769307543.png" alt="Scalable Board Expansion within a General Game System" class="card-image">
+                <div class="card-content">
+                    <span class="card-category model">模型层</span>
+                    <h3 class="card-title">Scalable Board Expansion within a General Game System</h3>
+                    <p class="card-description">研究人员提出了一种可扩展的棋盘扩展框架，用于通用游戏系统。该方法通过分层表示和蒙特卡洛树搜索的结合，能够在复杂游戏环境中实现高效决策和规划，为通用游戏AI的发展提供了新思路。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: arXiv</span>
+                        <span class="card-time">2026-01-23</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="model">
+                <img src="images/article_1_1769307543.png" alt="Q-Probe: Scaling Image Quality Assessment to High Resolution via Context-Aware Agentic Probing" class="card-image">
+                <div class="card-content">
+                    <span class="card-category model">模型层</span>
+                    <h3 class="card-title">Q-Probe: Scaling Image Quality Assessment to High Resolution via Context-Aware Agentic Probing</h3>
+                    <p class="card-description">Q-Probe是一种通过上下文感知智能探测来扩展图像质量评估至高分辨率的方法。该技术利用智能体系统动态分析图像内容，提供更准确的质量评估，特别适用于4K及以上分辨率的图像处理任务。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: arXiv</span>
+                        <span class="card-time">2026-01-23</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="model">
+                <img src="images/article_2_1769307544.png" alt="CORVUS: Red-Teaming Hallucination Detectors via Internal Signal Camouflage in Large Language Models" class="card-image">
+                <div class="card-content">
+                    <span class="card-category model">模型层</span>
+                    <h3 class="card-title">CORVUS: Red-Teaming Hallucination Detectors via Internal Signal Camouflage in Large Language Models</h3>
+                    <p class="card-description">CORVUS是一种通过内部信号伪装来对抗大语言模型幻觉检测器的红队技术。该方法能够在保持模型性能的同时，有效测试和改进幻觉检测系统的鲁棒性，为AI安全性评估提供了新工具。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: arXiv</span>
+                        <span class="card-time">2026-01-22</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="product">
+                <img src="images/article_3_1769307544.jpg" alt="FlashLabs发布Chroma 1.0：全球首个开源端到端实时语音AI模型" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">FlashLabs发布Chroma 1.0：全球首个开源端到端实时语音AI模型</h3>
+                    <p class="card-description">FlashLabs发布了Chroma 1.0，这是全球首个开源、端到端的实时语音到语音AI模型，支持个性化语音克隆。该模型能够实现延迟低于150毫秒的自然对话，为自主语音代理、AI呼叫中心和实时翻译等应用提供了强大支持。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: PR Newswire</span>
+                        <span class="card-time">2026-01-22</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="product">
+                <img src="images/article_4_1769307544.jpg" alt="Nous Research发布完全可复现的开源AI编码模型" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">Nous Research发布完全可复现的开源AI编码模型</h3>
+                    <p class="card-description">Nous Research开源了NousCoder-14B，这是一个完全可复现的AI编码模型，旨在与专有系统竞争。该模型在LiveCodeBench v6上达到了67.87%的准确率，展示了开源AI在软件开发领域的强大潜力。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: Open Source For You</span>
+                        <span class="card-time">2026-01-09</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="product">
+                <img src="images/article_5_1769307545.png" alt="Adobe Premiere更新：AI工具自动实现Rotoscoping" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">Adobe Premiere更新：AI工具自动实现Rotoscoping</h3>
+                    <p class="card-description">Adobe Premiere版本26.0更新引入了一套AI驱动工具，旨在自动化复杂的Rotoscoping过程。新功能包括AI对象遮罩、双向跟踪和3D透视跟踪，能够实时检测和跟踪视频中的对象，显著提升后期制作工作效率。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: B2B Daily</span>
+                        <span class="card-time">2026-01-22</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="product">
+                <img src="images/article_9_1769307546.webp" alt="OpenAI宣布2026年推出首款可穿戴AI产品" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">OpenAI宣布2026年推出首款可穿戴AI产品</h3>
+                    <p class="card-description">OpenAI确认将在2026年推出其首款物理AI设备，由前苹果设计总监Jony Ive参与开发。该设备设计为无屏幕、语音优先的AI伴侣，采用极简设计，支持环境感知和理解功能，旨在提供全新的AI计算体验。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: Parameter.io</span>
+                        <span class="card-time">2026-01-19</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="product">
+                <img src="images/article_12_1769307548.png" alt="Y Combinator 2026年AI初创公司名单公布" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">Y Combinator 2026年AI初创公司名单公布</h3>
+                    <p class="card-description">Y Combinator发布了2026年旧金山湾区AI初创公司名单，共收录816家顶级AI初创公司。包括Scale AI、Checkr、RunAnywhere、Arzule、Burt、Panta、Lexius、Pax Historia、Bujo AI等多家创新企业，涵盖SaaS、计算机视觉、游戏、消费者市场等多个领域。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: Y Combinator</span>
+                        <span class="card-time">2026-01-01</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="company">
+                <img src="images/article_6_1769307545.png" alt="Google推出GIST：智能采样的新阶段" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">Google推出GIST：智能采样的新阶段</h3>
+                    <p class="card-description">Google研究团队发布了GIST（Generalized Importance Sampling with Transformers）算法，这是智能采样技术的重要进展。该算法利用Transformer架构优化重要性采样过程，显著提升机器学习模型的训练效率和收敛速度。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: Google Research Blog</span>
+                        <span class="card-time">2026-01-23</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="company">
+                <img src="images/article_7_1769307545.png" alt="谷歌发布TranslateGemma，OpenAI加强AI翻译竞争" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">谷歌发布TranslateGemma，OpenAI加强AI翻译竞争</h3>
+                    <p class="card-description">谷歌推出了开源翻译模型TranslateGemma，支持55种语言的高质量翻译。该模型基于Gemma 3架构，提供多种参数版本，可在各种设备上运行。同时，OpenAI也发布了基于ChatGPT的翻译工具，两大巨头在AI翻译领域的竞争日益激烈。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: Business Today</span>
+                        <span class="card-time">2026-01-16</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="company">
+                <img src="images/article_8_1769307546.png" alt="Demis Hassabis：AI变革比工业革命大10倍、快10倍" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">Demis Hassabis：AI变革比工业革命大10倍、快10倍</h3>
+                    <p class="card-description">Google DeepMind CEO Demis Hassabis在达沃斯论坛表示，AI带来的变革将是工业革命的10倍规模、10倍速度。他认为谷歌的全栈优势是其长期竞争力的核心，并预测有50%的可能性在2030年实现AGI。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: StartupHub.ai</span>
+                        <span class="card-time">2026-01-21</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="company">
+                <img src="images/article_10_1769307547.png" alt="OpenAI推出AI年龄预测工具，限制未成年人使用ChatGPT" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">OpenAI推出AI年龄预测工具，限制未成年人使用ChatGPT</h3>
+                    <p class="card-description">OpenAI为ChatGPT引入了&quot;年龄预测&quot;功能，通过分析用户行为和账户信号自动识别未成年人并应用内容过滤器。该功能旨在保护年轻用户，防止其接触不当内容，同时允许被错误分类的用户通过身份验证恢复账户状态。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: TechBriefly</span>
+                        <span class="card-time">2026-01-21</span>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="card" data-category="company">
+                <img src="images/article_11_1769307547.png" alt="2026年Q1全球AI新品预览：大模型迈入&quot;2.0时代&quot;" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">2026年Q1全球AI新品预览：大模型迈入&quot;2.0时代&quot;</h3>
+                    <p class="card-description">2026年第一季度，全球科技巨头将发布多款重要AI新品。OpenAI计划推出GPT-5.2，Google将全面商用Gemini 3系列，Meta计划发布代号&quot;Avocado&quot;的新一代模型。在智能终端方面，苹果iOS 26.4将升级Siri，字节跳动将推出豆包AI眼镜。</p>
+                    <div class="card-meta">
+                        <span class="card-source">来源: 微信公众平台</span>
+                        <span class="card-time">2026-01-23</span>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    </main>
+
+    <footer class="container">
+        <p>AI资讯聚合网页 | 每日自动更新 | 聚焦AI领域三层关键动态</p>
+        <div class="footer-links">
+            <a href="#" onclick="return false;">关于项目</a> | 
+            <a href="#" onclick="return false;">使用说明</a> | 
+            <a href="#" onclick="return false;">数据来源</a> | 
+            <a href="#" onclick="return false;">反馈建议</a>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.8rem; color: #aaa;">本页面通过自动化流程生成，内容来自公开网络资源，仅供参考。</p>
+    </footer>
+
+    <script>
+        // 分类筛选功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const cards = document.querySelectorAll('.card');
+            
+            // 设置当前日期
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('zh-CN', options);
+            
+            // 分类按钮点击事件
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    // 为当前点击按钮添加active类
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // 筛选卡片
+                    cards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // 初始化显示所有卡片
+            cards.forEach(card => {
+                card.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

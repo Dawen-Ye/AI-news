@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI资讯聚合 - 每日更新</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .update-time {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        /* 分类导航 */
+        .categories {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-btn {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #555;
+        }
+
+        .category-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .category-btn.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 卡片容器 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 3rem;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            background-color: #f0f0f0;
+        }
+
+        .card-content {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            align-self: flex-start;
+        }
+
+        .card-category.model {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .card-category.product {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .card-category.company {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #222;
+            line-height: 1.4;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #888;
+            border-top: 1px solid #eee;
+            padding-top: 16px;
+            margin-top: auto;
+        }
+
+        .card-source {
+            font-weight: 600;
+            color: #555;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eaeaea;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .category-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .card-image {
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .categories {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-btn {
+                width: 100%;
+                max-width: 250px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">AI资讯聚合</h1>
+            <p class="subtitle">每日更新最新AI领域动态，涵盖模型层、产品层、大厂动态三个维度</p>
+            <p class="update-time">更新于 <span id="current-date">2026年01月26日 10:20</span> | 共收录 13 篇资讯</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="categories">
+            <button class="category-btn active" data-category="all">全部</button>
+            <button class="category-btn" data-category="model">模型层</button>
+            <button class="category-btn" data-category="product">产品层</button>
+            <button class="category-btn" data-category="company">大厂动态</button>
+        </div>
+
+        <div class="cards-container">
+            <div class="card" data-category="model">
+                <img src="images/article_0_1769392933.png" alt="展望全球人工智能2026年演进新局：技术、产业与治理多重变量交织" class="card-image">
+                <div class="card-content">
+                    <span class="card-category model">模型层</span>
+                    <h3 class="card-title">展望全球人工智能2026年演进新局：技术、产业与治理多重变量交织</h3>
+                    <p class="card-description">新华社《经济参考报》发布2026年AI发展展望报告，指出技术、产业、能源、治理多重变量将共同塑造AI关键年份。报告显示越来越多的顶尖AI企业将聚焦提升大模型推理能力与智能体执行任务能力，推动AI从&#39;会生成&#39;向&#39;会规划、会行动&#39;进化。美国高德纳咨询公司预测，2026年40%的企业应用将嵌入任务型AI智能体，这一比例在2025年还不足5%。</p>
+                    <div class="card-meta">
+                        <a href="http://www.jjckb.cn/20260126/e6fe25f0412c47af84a1aa080a055339/c.html" target="_blank" class="card-source">来源: 新华社《经济参考报》</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="model">
+                <img src="images/article_1_1769392933.png" alt="中信建投研报：多模态进一步引发创作变革，国产模型加速商业化" class="card-image">
+                <div class="card-content">
+                    <span class="card-category model">模型层</span>
+                    <h3 class="card-title">中信建投研报：多模态进一步引发创作变革，国产模型加速商业化</h3>
+                    <p class="card-description">中信建投发布计算机行业研报，指出多模态技术正加速AI内容创作变革。报告分析国内头部AI厂商进展：快手可灵AI月活突破1200万，2025年12月单月收入达2000万美元；Minimax海螺AI解决大动态运镜物理崩坏问题；阿里通义万相实现商业化角色扮演功能；智谱AI联合华为发布GLM-Image，在国产全栈算力底座完成训练。</p>
+                    <div class="card-meta">
+                        <a href="https://activity.csc108.com/activity/messageCon/#/homePage?reportId=2_1_74d04286-0f0e-4a9d-9ab8-7a4e729c5baf_1769339124081" target="_blank" class="card-source">来源: 中信建投证券</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="model">
+                <img src="images/article_2_1769392934.png" alt="研究：AI创造力测试首次超越普通人类，但顶级人类仍领先" class="card-image">
+                <div class="card-content">
+                    <span class="card-category model">模型层</span>
+                    <h3 class="card-title">研究：AI创造力测试首次超越普通人类，但顶级人类仍领先</h3>
+                    <p class="card-description">一项大规模新研究比较了10万多名人类与最先进AI系统的创造力，结果显示生成式AI现在可以在某些创造力测试中击败普通人类。GPT-4等模型在衡量原创思维和想法生成的任务上表现出色，有时胜过典型的人类回应。但研究也发现有明显上限：最有创造力的人类——尤其是前10%——在诗歌和讲故事等更丰富的创造性工作方面仍然远超AI。</p>
+                    <div class="card-meta">
+                        <a href="https://www.sciencedaily.com/releases/2026/01/260125083356.htm" target="_blank" class="card-source">来源: Science Daily</a>
+                        <span class="card-time">2026-01-25</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="product">
+                <img src="images/article_3_1769392934.jpg" alt="GitHub趋势日报：Remotion、PageIndex、UltraRAG等AI项目受热捧" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">GitHub趋势日报：Remotion、PageIndex、UltraRAG等AI项目受热捧</h3>
+                    <p class="card-description">今日GitHub热门AI项目包括：remotion-dev/Remotion（使用React以编程方式制作视频）、VectifyAI/PageIndex（用于无向量、基于推理的RAG的文档索引）、OpenBMB/UltraRAG（用于构建复杂RAG管道的低代码MCP框架）。这些项目展示了AI在视频生成、检索增强生成和开发工具领域的最新进展。</p>
+                    <div class="card-meta">
+                        <a href="http://m.toutiao.com/group/7599457117304635914/" target="_blank" class="card-source">来源: 海涛玩AI</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="product">
+                <img src="images/article_4_1769392935.jpg" alt="互联网大厂开启春节AI应用流量大战：百度派5亿红包，腾讯元宝分10亿" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">互联网大厂开启春节AI应用流量大战：百度派5亿红包，腾讯元宝分10亿</h3>
+                    <p class="card-description">春节临近，互联网巨头开启AI应用拉新大战。百度宣布1月26日至3月12日发放5亿现金红包，通过文心助手参与AI玩法即可瓜分；腾讯元宝则宣布2月1日开启新春活动，分10亿现金红包。此外，火山引擎成为总台春晚独家AI云合作伙伴，豆包AI也将深度参与。春节红包成为各大AI应用拉动C端新用户的重要手段。</p>
+                    <div class="card-meta">
+                        <a href="http://m.toutiao.com/group/7599454688894878234/" target="_blank" class="card-source">来源: 财联社</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="product">
+                <img src="images/article_5_1769392936.png" alt="派5亿现金红包！百度文心助手加入春节AI应用拉新大战" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">派5亿现金红包！百度文心助手加入春节AI应用拉新大战</h3>
+                    <p class="card-description">百度App上线马年&#39;奇幻人生&#39;玩法，用户可体验近200款脑洞大开的AI特效玩法，同时推出&#39;奇幻人生卡&#39;集卡活动。1月27日至2月21日，每晚20点在小红书官方账号发布线索进行&#39;看马图猜口令词&#39;，在文心助手内输入猜中的口令词即可开启隐藏红包彩蛋。活动期间使用文心助手就能瓜分5亿现金红包。</p>
+                    <div class="card-meta">
+                        <a href="http://m.toutiao.com/group/7599467251230343680/" target="_blank" class="card-source">来源: 南方都市报</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="product">
+                <img src="images/article_6_1769392936.png" alt="2026年全球AI、具身智能人形机器人及低空经济发展综述" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">2026年全球AI、具身智能人形机器人及低空经济发展综述</h3>
+                    <p class="card-description">进入2026年初，以AI为核心驱动力的新一轮科技革命正以前所未有的广度与深度席卷全球。AI与物理世界深度融合，催生出具身智能、人形机器人等新兴领域，并赋能低空经济战略产业腾飞。三大领域相互交织，共同构成未来全球经济增长和科技竞争的核心赛道，成为&#39;新质生产力&#39;的典型代表。</p>
+                    <div class="card-meta">
+                        <a href="http://m.toutiao.com/group/7599435360170476066/" target="_blank" class="card-source">来源: 李鸿昇</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="product">
+                <img src="images/article_7_1769392936.png" alt="2025-2026年人工智能最新技术突破与应用全景" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">2025-2026年人工智能最新技术突破与应用全景</h3>
+                    <p class="card-description">CSDN博客发布AI技术全景分析，涵盖生成式AI从单模态到多模态的跨越式进化、大语言模型在垂直领域的深度赋能、医疗AI从辅助诊断到系统重构、自动驾驶端到端与商业化双突破等前沿领域。分析指出AI正以&#39;效率革命&#39;和&#39;智能重构&#39;双引擎推动社会变革，未来五年将实现从&#39;效率工具&#39;向&#39;智能体&#39;的跃迁。</p>
+                    <div class="card-meta">
+                        <a href="https://blog.csdn.net/guse1125/article/details/156574709" target="_blank" class="card-source">来源: CSDN</a>
+                        <span class="card-time">2026-01-24</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="company">
+                <img src="images/article_8_1769392937.png" alt="达沃斯论坛热议AI社会影响：AGI可能在1-5年内实现，劳动力市场面临未知数" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">达沃斯论坛热议AI社会影响：AGI可能在1-5年内实现，劳动力市场面临未知数</h3>
+                    <p class="card-description">2026年世界经济论坛（达沃斯论坛）将AI置于聚光灯下，专家探讨通用人工智能（AGI）在短短5年内实现的可能性。Anthropic CEO达里奥·阿莫迪与谷歌DeepMind负责人德米斯·哈萨比斯指出，AGI可能在1-5年内成为现实。IMF总裁克里斯塔利娜·格奥尔基耶娃表示，AI有望为全球经济增长贡献0.8%，但劳动力市场正面临&#39;如海啸般的冲击&#39;。</p>
+                    <div class="card-meta">
+                        <a href="http://m.toutiao.com/group/7599463685170217522/" target="_blank" class="card-source">来源: 北京日报</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="company">
+                <img src="images/article_9_1769392936.webp" alt="中国与东盟专家探索AI治理合作新路径：安全可控、普惠共享" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">中国与东盟专家探索AI治理合作新路径：安全可控、普惠共享</h3>
+                    <p class="card-description">2026中国—东盟AI能力建设培训班暨AI前沿技术与治理高层次研讨会在吉隆坡举行，中马两国及东盟地区百余名代表与会。会议聚焦如何在推动技术创新的同时实现AI安全可控、普惠共享。专家认为AI治理急需在区域和国际层面加强协调合作，AI发展成果应通过系统性能力建设惠及更广泛国家和群体。</p>
+                    <div class="card-meta">
+                        <a href="http://m.toutiao.com/group/7599393559657169418/" target="_blank" class="card-source">来源: 光明网</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="company">
+                <img src="images/article_10_1769392947.png" alt="OpenAI动态更新：Sora 2引发争议，ChatGPT新增年龄检测功能" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">OpenAI动态更新：Sora 2引发争议，ChatGPT新增年龄检测功能</h3>
+                    <p class="card-description">CBS News汇总OpenAI最新动态：Sora 2视频生成应用引发好莱坞担忧和版权争议；ChatGPT推出AI年龄预测工具，限制未成年人使用；AMD与OpenAI达成AI芯片供应协议；ChatGPT Go订阅解锁无限访问GPT-5.2 Instant；OpenAI为ChatGPT新增家长控制功能，允许家长监控儿童使用情况。</p>
+                    <div class="card-meta">
+                        <a href="https://www.cbsnews.com/tag/openai/2/" target="_blank" class="card-source">来源: CBS News</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="company">
+                <img src="images/article_11_1769392947.png" alt="爆肝解读AAAI 2026最佳论文！华人团队三大突破，大模型+机器人+CLIP技术让小白秒变大神" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">爆肝解读AAAI 2026最佳论文！华人团队三大突破，大模型+机器人+CLIP技术让小白秒变大神</h3>
+                    <p class="card-description">AAAI 2026会议公布5篇杰出论文奖，其中3篇由华人团队主导。ReconVLA提出重建式视觉-语言-动作模型，解决机器人视觉注意力分散问题；LLM2CLIP将大语言模型嵌入CLIP，显著提升多模态表示能力；其他研究涉及描述逻辑概念、动力系统因果发现和超图神经网络。这些研究展现了AI前沿技术的创新应用，对大模型开发者和研究者具有重要参考价值。</p>
+                    <div class="card-meta">
+                        <a href="https://damodev.csdn.net/69734acb7c1d88441d8f0b2c.html" target="_blank" class="card-source">来源: CSDN</a>
+                        <span class="card-time">2026-01-23</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="company">
+                <img src="images/article_12_1769392948.png" alt="AI日报：ChatGPT Atlas浏览器重大更新；通义正式开源Qwen3-TTS；Optimus机器人2027年公售" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">AI日报：ChatGPT Atlas浏览器重大更新；通义正式开源Qwen3-TTS；Optimus机器人2027年公售</h3>
+                    <p class="card-description">AI日报汇总最新动态：OpenAI发布ChatGPT Atlas浏览器重大更新，支持标签页分组和搜索自动导航；阿里通义千问开源Qwen3-TTS语音生成模型，支持97ms超低延迟语音合成；马斯克宣布Optimus机器人2027年向公众出售；可灵AI月收入达2000万美元，商业化能力突出。</p>
+                    <div class="card-meta">
+                        <a href="http://m.toutiao.com/group/7598591955207914030/" target="_blank" class="card-source">来源: 站长之家</a>
+                        <span class="card-time">2026-01-24</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="container">
+        <p>AI资讯聚合网页 | 每日自动更新 | 聚焦AI领域三层关键动态</p>
+        <div class="footer-links">
+            <a href="#" onclick="return false;">关于项目</a> | 
+            <a href="#" onclick="return false;">使用说明</a> | 
+            <a href="#" onclick="return false;">数据来源</a> | 
+            <a href="#" onclick="return false;">反馈建议</a>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.8rem; color: #aaa;">本页面通过自动化流程生成，内容来自公开网络资源，仅供参考。</p>
+    </footer>
+
+    <script>
+        // 分类筛选功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const cards = document.querySelectorAll('.card');
+            
+            // 分类按钮点击事件
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    // 为当前点击按钮添加active类
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // 筛选卡片
+                    cards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // 初始化显示所有卡片
+            cards.forEach(card => {
+                card.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>

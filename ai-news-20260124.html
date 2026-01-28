@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI资讯聚合 - 每日更新</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+        
+        .header-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn.active {
+            background-color: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        .card-img-top {
+            object-fit: cover;
+        }
+        
+        .footer {
+            background-color: #f1f3f5;
+            color: #6c757d;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .card-img-top {
+                height: 180px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card-img-top {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部 -->
+    <div class="header-bg">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-4 fw-bold"><i class="fas fa-brain me-2"></i>AI资讯聚合</h1>
+                    <p class="lead">每日更新AI领域最新动态，涵盖模型进展、产品创新与大厂动向</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <span class="badge bg-light text-dark me-3"><i class="fas fa-calendar-alt me-1"></i> 2026年01月24日</span>
+                        <span class="badge bg-light text-dark"><i class="fas fa-clock me-1"></i> 每天上午10:00更新</span>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="bg-white rounded p-3 shadow-sm d-inline-block">
+                        <h5 class="mb-2"><i class="fas fa-chart-bar me-1 text-primary"></i> 今日统计</h5>
+                        <div class="d-flex justify-content-around">
+                            <div class="text-center">
+                                <div class="h4 mb-0">8</div>
+                                <small class="text-muted">总篇数</small>
+                            </div>
+                            <div class="text-center">
+                                <div class="h4 mb-0">2</div>
+                                <small class="text-muted">模型层</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="container">
+        <!-- 分类导航 -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-primary category-btn active" data-category="all">
+                        <i class="fas fa-th-large me-1"></i> 全部资讯
+                    </button>
+                    <button class="btn btn-outline-primary category-btn" data-category="模型层">
+                        <i class="fas fa-cogs me-1"></i> 模型层
+                    </button>
+                    <button class="btn btn-outline-primary category-btn" data-category="产品层">
+                        <i class="fas fa-rocket me-1"></i> 产品层
+                    </button>
+                    <button class="btn btn-outline-primary category-btn" data-category="大厂动态">
+                        <i class="fas fa-building me-1"></i> 大厂动态
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文章卡片 -->
+        <div class="row" id="articles-container">
+            
+        <div class="col-md-4 mb-4" data-category="模型层">
+            <div class="card h-100 shadow-sm">
+                <img src="images/google_ai_research.png" class="card-img-top" alt="Google推出GIST：智能采样的新阶段" style="height: 200px; object-fit: cover;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"><rect width=\"100%\" height=\"100%\" fill=\"#667eea\"></rect><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" fill=\"white\" font-family=\"sans-serif\">AI资讯</text></svg>';">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge bg-primary">模型层</span>
+                        <small class="text-muted ms-2">2026-01-23</small>
+                    </div>
+                    <h5 class="card-title">Google推出GIST：智能采样的新阶段</h5>
+                    <p class="card-text flex-grow-1">Google研究团队发布了GIST（Generalized Importance Sampling with Transformers）算法，这是智能采样技术的重要进展。该算法利用Transformer架构优化重要性采样过程，显著提升机器学习模型的训练效率和收敛速度。GIST能够自适应地调整采样分布，在保持估计偏差低的同时大幅降低方差，特别适用于大规模强化学</p>
+                    <div class="mt-auto">
+                        <small class="text-muted">来源: Google Research Blog</small>
+                        <a href="https://research.google/blog/2026/01/23/introducing-gist/" target="_blank" class="btn btn-outline-primary btn-sm mt-2">阅读原文</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4" data-category="模型层">
+            <div class="card h-100 shadow-sm">
+                <img src="images/ai_tech_research.jpg" class="card-img-top" alt="arXiv最新AI研究：强化学习与元学习融合" style="height: 200px; object-fit: cover;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"><rect width=\"100%\" height=\"100%\" fill=\"#667eea\"></rect><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" fill=\"white\" font-family=\"sans-serif\">AI资讯</text></svg>';">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge bg-primary">模型层</span>
+                        <small class="text-muted ms-2">2026-01-21</small>
+                    </div>
+                    <h5 class="card-title">arXiv最新AI研究：强化学习与元学习融合</h5>
+                    <p class="card-text flex-grow-1">arXiv平台最新发布的AI研究论文显示，研究人员在深度强化学习领域取得了重要突破。新的分层策略优化算法结合了模型预测控制和元学习技术，能够在复杂环境中实现更稳定的训练和更好的泛化能力。该算法在机器人控制和游戏智能体等任务中表现出色，为强化学习在实际应用中的部署提供了新思路。</p>
+                    <div class="mt-auto">
+                        <small class="text-muted">来源: arXiv</small>
+                        <a href="https://arxiv.org/list/cs.AI/recent?skip=577" target="_blank" class="btn btn-outline-primary btn-sm mt-2">阅读原文</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4" data-category="产品层">
+            <div class="card h-100 shadow-sm">
+                <img src="images/ai_human_collab.jpg" class="card-img-top" alt="DeepMind和OpenAI前员工成立human-centered AI实验室" style="height: 200px; object-fit: cover;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"><rect width=\"100%\" height=\"100%\" fill=\"#667eea\"></rect><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" fill=\"white\" font-family=\"sans-serif\">AI资讯</text></svg>';">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge bg-primary">产品层</span>
+                        <small class="text-muted ms-2">2026-01-20</small>
+                    </div>
+                    <h5 class="card-title">DeepMind和OpenAI前员工成立human-centered AI实验室</h5>
+                    <p class="card-text flex-grow-1">一群来自DeepMind和OpenAI的前员工共同创立了humans&amp;实验室，专注于开发以人为本的人工智能系统。该实验室获得了Jeff Bezos、NVIDIA和Google Ventures的种子轮投资，致力于推动AI与人类协作的新范式。创始团队强调将从底层重新思考AI设计，聚焦于增强人类能力而非取代人类工作。</p>
+                    <div class="mt-auto">
+                        <small class="text-muted">来源: StartupHub.ai</small>
+                        <a href="https://www.startuphub.ai/ai-news/funding-round/2026/deepmind-openai-vets-launch-humans-for-human-centered-ai/" target="_blank" class="btn btn-outline-primary btn-sm mt-2">阅读原文</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4" data-category="产品层">
+            <div class="card h-100 shadow-sm">
+                <img src="images/neural_network.jpg" class="card-img-top" alt="2026开年必看：10个AI工具重磅更新" style="height: 200px; object-fit: cover;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"><rect width=\"100%\" height=\"100%\" fill=\"#667eea\"></rect><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" fill=\"white\" font-family=\"sans-serif\">AI资讯</text></svg>';">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge bg-primary">产品层</span>
+                        <small class="text-muted ms-2">2026-01-11</small>
+                    </div>
+                    <h5 class="card-title">2026开年必看：10个AI工具重磅更新</h5>
+                    <p class="card-text flex-grow-1">新年伊始，各大AI平台密集推出一系列实用功能更新。NotebookLM新增一键生成结构化资料表功能，ChatGPT推出个性化年度回顾和AI人格微调，Gemini可直接调用NotebookLM笔记生成简报，Gamma推出工作室模式批量生成幻灯片。这些更新体现了AI工具的深度集成、流程自动化和高度个性化趋势。</p>
+                    <div class="mt-auto">
+                        <small class="text-muted">来源: 微信公众平台</small>
+                        <a href="http://mp.weixin.qq.com/s?__biz=Mzk3NTA0NTg1Mg==&mid=2247483769&idx=1&sn=c04286cfe3d74da56d22a267f19a80ac&scene=0" target="_blank" class="btn btn-outline-primary btn-sm mt-2">阅读原文</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4" data-category="大厂动态">
+            <div class="card h-100 shadow-sm">
+                <img src="images/google_ai_research.png" class="card-img-top" alt="谷歌发布TranslateGemma，OpenAI加强AI翻译竞争" style="height: 200px; object-fit: cover;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"><rect width=\"100%\" height=\"100%\" fill=\"#667eea\"></rect><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" fill=\"white\" font-family=\"sans-serif\">AI资讯</text></svg>';">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge bg-primary">大厂动态</span>
+                        <small class="text-muted ms-2">2026-01-16</small>
+                    </div>
+                    <h5 class="card-title">谷歌发布TranslateGemma，OpenAI加强AI翻译竞争</h5>
+                    <p class="card-text flex-grow-1">谷歌推出了开源翻译模型TranslateGemma，支持55种语言的高质量翻译。该模型基于Gemma 3架构，提供4B、12B、27B三种参数版本，可在从智能手机到云服务器的各种设备上运行。同时，OpenAI也发布了基于ChatGPT的翻译工具，支持50多种语言的文本、语音和图像翻译，两大巨头在AI翻译领域的竞争日益激烈。</p>
+                    <div class="mt-auto">
+                        <small class="text-muted">来源: Business Today</small>
+                        <a href="https://www.businesstoday.in/technology/story/google-unveils-translategemma-as-openai-steps-up-its-own-ai-translation-push-511154-2026-01-16" target="_blank" class="btn btn-outline-primary btn-sm mt-2">阅读原文</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4" data-category="大厂动态">
+            <div class="card h-100 shadow-sm">
+                <img src="images/ai_human_collab.jpg" class="card-img-top" alt="Demis Hassabis：AI变革比工业革命大10倍、快10倍" style="height: 200px; object-fit: cover;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"><rect width=\"100%\" height=\"100%\" fill=\"#667eea\"></rect><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" fill=\"white\" font-family=\"sans-serif\">AI资讯</text></svg>';">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge bg-primary">大厂动态</span>
+                        <small class="text-muted ms-2">2026-01-21</small>
+                    </div>
+                    <h5 class="card-title">Demis Hassabis：AI变革比工业革命大10倍、快10倍</h5>
+                    <p class="card-text flex-grow-1">Google DeepMind CEO Demis Hassabis在达沃斯论坛表示，AI带来的变革将是工业革命的10倍规模、10倍速度。他认为谷歌的全栈优势（TPU算力、数据中心、DeepMind研究和十亿级用户产品）是其长期竞争力的核心。Hassabis预测有50%的可能性在2030年实现AGI，并强调了全球协作在AI安全方面的重要性。</p>
+                    <div class="mt-auto">
+                        <small class="text-muted">来源: StartupHub.ai</small>
+                        <a href="https://www.startuphub.ai/ai-news/ai-video/2026/demis-hassabis-on-the-ai-shift-10-times-bigger-and-faster-than-the-industrial-revolution/" target="_blank" class="btn btn-outline-primary btn-sm mt-2">阅读原文</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4" data-category="产品层">
+            <div class="card h-100 shadow-sm">
+                <img src="images/ai_tech_research.jpg" class="card-img-top" alt="Adobe Premiere更新：AI工具自动实现Rotoscoping" style="height: 200px; object-fit: cover;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"><rect width=\"100%\" height=\"100%\" fill=\"#667eea\"></rect><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" fill=\"white\" font-family=\"sans-serif\">AI资讯</text></svg>';">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge bg-primary">产品层</span>
+                        <small class="text-muted ms-2">2026-01-22</small>
+                    </div>
+                    <h5 class="card-title">Adobe Premiere更新：AI工具自动实现Rotoscoping</h5>
+                    <p class="card-text flex-grow-1">Adobe Premiere版本26.0更新引入了一套AI驱动工具，旨在自动化复杂的Rotoscoping过程。新功能包括AI对象遮罩、双向跟踪和3D透视跟踪，能够实时检测和跟踪视频中的对象，显著提升后期制作工作效率。该更新标志着视频编辑与专业视觉特效的进一步融合。</p>
+                    <div class="mt-auto">
+                        <small class="text-muted">来源: B2B Daily</small>
+                        <a href="https://b2bdaily.com/it/premiere-update-automates-rotoscoping-with-new-ai-tools/" target="_blank" class="btn btn-outline-primary btn-sm mt-2">阅读原文</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 mb-4" data-category="大厂动态">
+            <div class="card h-100 shadow-sm">
+                <img src="images/google_ai_research.png" class="card-img-top" alt="美银上调谷歌目标价至370美元：AI全栈闭环兑现盈利" style="height: 200px; object-fit: cover;" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"400\" height=\"200\"><rect width=\"100%\" height=\"100%\" fill=\"#667eea\"></rect><text x=\"50%\" y=\"50%\" dominant-baseline=\"middle\" text-anchor=\"middle\" fill=\"white\" font-family=\"sans-serif\">AI资讯</text></svg>';">
+                <div class="card-body d-flex flex-column">
+                    <div class="mb-2">
+                        <span class="badge bg-primary">大厂动态</span>
+                        <small class="text-muted ms-2">2026-01-14</small>
+                    </div>
+                    <h5 class="card-title">美银上调谷歌目标价至370美元：AI全栈闭环兑现盈利</h5>
+                    <p class="card-text flex-grow-1">美银发布Alphabet深度研报，将目标价从335美元上调至370美元，维持买入评级。报告认为谷歌以Gemini大模型、TPU算力硬件、搜索流量生态与云服务构建的AI全栈布局已在2025年实现盈利大幅增长，2026年商业化落地将进一步打开增长空间。预计Gemini授权收入在2026年有望达到30亿美元。</p>
+                    <div class="mt-auto">
+                        <small class="text-muted">来源: 雪球</small>
+                        <a href="https://xueqiu.com/9993624771/370763837" target="_blank" class="btn btn-outline-primary btn-sm mt-2">阅读原文</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        </div>
+        
+        <!-- 统计信息 -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card border-0 bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-info-circle me-2"></i>数据说明</h5>
+                        <div class="row text-center">
+                            <div class="col-md-4 mb-3">
+                                <div class="h2 text-primary">8</div>
+                                <p class="text-muted mb-0">今日收录文章</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="h2 text-success">2</div>
+                                <p class="text-muted mb-0">模型层文章</p>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="h2 text-info">3</div>
+                                <p class="text-muted mb-0">产品层文章</p>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <small class="text-muted"><i class="fas fa-exclamation-circle me-1"></i> 数据来源：基于头部AI媒体和官方博客的自动化搜索，每天上午10:00更新</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-project-diagram me-2"></i>AI资讯聚合</h5>
+                    <p class="mb-2">每日自动化更新AI领域最新动态，帮助您快速掌握行业趋势。</p>
+                    <div class="d-flex gap-3">
+                        <span class="badge bg-primary"><i class="fas fa-database me-1"></i> 每日更新</span>
+                        <span class="badge bg-success"><i class="fas fa-search me-1"></i> 智能搜索</span>
+                        <span class="badge bg-info"><i class="fas fa-sync-alt me-1"></i> 自动去重</span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5><i class="fas fa-link me-2"></i>快速链接</h5>
+                    <div class="d-flex flex-wrap justify-content-md-end gap-3">
+                        <a href="#" class="text-decoration-none text-muted"><i class="fas fa-home me-1"></i> 首页</a>
+                        <a href="#" class="text-decoration-none text-muted"><i class="fas fa-filter me-1"></i> 分类浏览</a>
+                        <a href="#" class="text-decoration-none text-muted"><i class="fas fa-history me-1"></i> 历史存档</a>
+                        <a href="#" class="text-decoration-none text-muted"><i class="fas fa-info-circle me-1"></i> 关于</a>
+                    </div>
+                    <div class="mt-3">
+                        <p class="text-muted mb-1"><i class="far fa-copyright me-1"></i> 2026 AI资讯聚合</p>
+                        <small class="text-muted">最后更新时间：2026年01月24日 10:00</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 分类筛选功能
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const articles = document.querySelectorAll('[data-category]');
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    categoryBtns.forEach(b => {
+                        b.classList.remove('active');
+                        b.classList.add('btn-outline-primary');
+                        b.classList.remove('btn-primary');
+                    });
+                    
+                    // 为当前点击按钮添加active类
+                    this.classList.add('active');
+                    this.classList.remove('btn-outline-primary');
+                    this.classList.add('btn-primary');
+                    
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // 筛选文章卡片
+                    articles.forEach(article => {
+                        if (selectedCategory === 'all' || article.getAttribute('data-category') === selectedCategory) {
+                            article.style.display = 'block';
+                        } else {
+                            article.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // 初始化显示所有文章
+            articles.forEach(article => {
+                article.style.display = 'block';
+            });
+            
+            // 更新当前日期
+            const now = new Date();
+            const currentDate = now.toLocaleDateString('zh-CN', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.querySelector('#current-date').textContent = currentDate;
+        });
+    </script>
+</body>
+</html>

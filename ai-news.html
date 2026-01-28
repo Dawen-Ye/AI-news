@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI资讯聚合 - 每日更新</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .update-time {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
+        /* 分类导航 */
+        .categories {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-btn {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #555;
+        }
+
+        .category-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .category-btn.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 卡片容器 */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 3rem;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-category {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            align-self: flex-start;
+        }
+
+        .card-category.model {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .card-category.product {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .card-category.company {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #222;
+            line-height: 1.4;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 1rem;
+            margin-top: auto;
+        }
+
+        .card-source {
+            font-size: 0.85rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .card-source:hover {
+            text-decoration: underline;
+        }
+
+        .card-time {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        /* 分类过滤器 */
+        .category-filters {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0 3rem;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 22px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #555;
+        }
+
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            color: #777;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            color: #777;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eaeaea;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            margin-top: 1rem;
+        }
+
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .category-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .card-image {
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .categories {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-btn {
+                width: 100%;
+                max-width: 250px;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">AI资讯聚合</h1>
+            <p class="subtitle">每日更新最新AI领域动态，涵盖模型层、产品层、大厂动态三个维度</p>
+            <p class="update-time">最后更新: 2026年01月28日 16:01 | 今日收录: 10篇</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="category-filters">
+            <button class="filter-btn active" data-category="all">全部 (10)</button>
+            <button class="filter-btn" data-category="model">模型层 (3)</button>
+            <button class="filter-btn" data-category="product">产品层 (4)</button>
+            <button class="filter-btn" data-category="company">大厂动态 (3)</button>
+        </div>
+
+        <div class="cards-container">
+            <div class="card" data-category="model">
+                <img src="images/article_0_1769587276.png" alt="Knowledge Graphs are Implicit Reward Models: Path-Derived Signals Enable Compositional Reasoning" class="card-image">
+                <div class="card-content">
+                    <span class="card-category model">模型层</span>
+                    <h3 class="card-title">Knowledge Graphs are Implicit Reward Models: Path-Derived Signals Enable Compositional Reasoning</h3>
+                    <p class="card-description">该论文提出知识图谱可以作为隐式奖励模型，通过路径推导信号实现组合推理。研究展示了如何利用知识图谱结构来提升AI系统的推理能力，特别是在复杂任务中的表现。这种方法为基于知识的人工智能系统提供了新的研究方向。</p>
+                    <div class="card-meta">
+                        <a href="https://arxiv.org/abs/2601.15160" target="_blank" class="card-source">来源: arXiv</a>
+                        <span class="card-time">2026-01-27</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="model">
+                <img src="images/article_1_1769587276.png" alt="How to Build AI Agents by Augmenting LLMs with Codified Human Expert Domain Knowledge" class="card-image">
+                <div class="card-content">
+                    <span class="card-category model">模型层</span>
+                    <h3 class="card-title">How to Build AI Agents by Augmenting LLMs with Codified Human Expert Domain Knowledge</h3>
+                    <p class="card-description">论文探讨了如何通过编码人类专家领域知识来增强大型语言模型，构建更强大的AI代理。研究提出了一种系统化方法，将专业知识转化为可计算的格式，从而提升AI在专业领域的表现和应用范围。</p>
+                    <div class="card-meta">
+                        <a href="https://arxiv.org/abs/2601.15153" target="_blank" class="card-source">来源: arXiv</a>
+                        <span class="card-time">2026-01-27</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="model">
+                <img src="images/article_2_1769587276.png" alt="Emergent, not Immanent: A Baradian Reading of Explainable AI" class="card-image">
+                <div class="card-content">
+                    <span class="card-category model">模型层</span>
+                    <h3 class="card-title">Emergent, not Immanent: A Baradian Reading of Explainable AI</h3>
+                    <p class="card-description">该论文从哲学视角审视可解释AI，提出可解释性应该是涌现的而非固有的。研究借鉴了Barad的理论，探讨了AI解释性如何在社会技术系统中生成，为理解AI系统的透明度和责任提供了新框架。</p>
+                    <div class="card-meta">
+                        <a href="https://arxiv.org/abs/2601.15029" target="_blank" class="card-source">来源: arXiv</a>
+                        <span class="card-time">2026-01-27</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="product">
+                <img src="images/article_3_1769587276.png" alt="2026年AI设计工具大盘点!这10款神器让你的效率翻倍提升!" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">2026年AI设计工具大盘点!这10款神器让你的效率翻倍提升!</h3>
+                    <p class="card-description">文章盘点了2026年最值得关注的10款AI设计工具，包括Flowpix、Midjourney v7、Paraflow、Figma AI插件等。这些工具在创意连贯性、自然瑕疵建模、需求结构化拆解等方面实现突破，适用于艺术创作、品牌视觉、产品设计等多个场景。</p>
+                    <div class="card-meta">
+                        <a href="http://szb.xnnews.com.cn/sqsd/202601/t20260126_4226743.htm" target="_blank" class="card-source">来源: 省情速递-咸宁日报</a>
+                        <span class="card-time">2026-01-26</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="product">
+                <img src="images/article_4_1769587277.png" alt="Genspark AI: The Next Generation of Search, Research &amp; Creative Tools (2026 Guide)" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">Genspark AI: The Next Generation of Search, Research &amp; Creative Tools (2026 Guide)</h3>
+                    <p class="card-description">Genspark AI是一个统一的AI驱动工作空间，集搜索、知识综合、自动化和内容生成于一体。平台提供深度研究、产品比较、旅行指导、多媒体创作和工作空间工具等功能，支持多种AI模型，旨在提升用户的生产力和创造力。</p>
+                    <div class="card-meta">
+                        <a href="https://techbullion.com/genspark-ai-the-next-generation-of-search-research-creative-tools-2026-guide/" target="_blank" class="card-source">来源: TechBullion</a>
+                        <span class="card-time">2026-01-23</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="product">
+                <img src="images/article_5_1769587277.png" alt="10 Best Agentic AI Workflow Automation Tools for 2026" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">10 Best Agentic AI Workflow Automation Tools for 2026</h3>
+                    <p class="card-description">文章评选了2026年最佳的10款智能AI工作流自动化工具，包括n8n、CrewAI、Zapier Central、LangGraph等。这些工具支持多代理协调、状态持久性、可视化作流程等高级功能，适用于企业自动化和复杂工作流场景。</p>
+                    <div class="card-meta">
+                        <a href="https://www.downgraf.com/general/10-best-agentic-ai-workflow-automation-tools-for-2026/" target="_blank" class="card-source">来源: Downgraf</a>
+                        <span class="card-time">2026-01-23</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="product">
+                <img src="images/article_6_1769587277.png" alt="Best AI Tools for Music Producers in 2026" class="card-image">
+                <div class="card-content">
+                    <span class="card-category product">产品层</span>
+                    <h3 class="card-title">Best AI Tools for Music Producers in 2026</h3>
+                    <p class="card-description">介绍了2026年音乐制作人最佳的AI工具，包括Soundverse Agent、AIVA、Amper Music、Soundraw、Mubert等。这些工具可以帮助音乐人加速工作流程、增强创造力、降低技术门槛，从旋律生成到混音母带处理等多个环节提供智能支持。</p>
+                    <div class="card-meta">
+                        <a href="https://www.soundverse.ai/blog/article/best-ai-tools-for-music-producers" target="_blank" class="card-source">来源: Soundverse</a>
+                        <span class="card-time">2026-01-24</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="company">
+                <img src="images/article_8_1769587278.png" alt="Microsoft unveils 7 AI trends for 2026" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">Microsoft unveils 7 AI trends for 2026</h3>
+                    <p class="card-description">微软公布了2026年7大AI趋势，包括AI将放大人类协作能力、AI智能体获得新安全保障、AI缩小全球健康差距、AI成为研究过程核心、AI基础设施更智能高效、AI学习代码语言及其上下文、量子计算迎来飞跃。这些趋势描绘了AI作为&#39;伙伴&#39;而非工具的未来愿景。</p>
+                    <div class="card-meta">
+                        <a href="https://news.microsoft.com/source/asia/2025/12/11/microsoft-unveils-7-ai-trends-for-2026/" target="_blank" class="card-source">来源: Microsoft News</a>
+                        <span class="card-time">2025-12-14</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="company">
+                <img src="images/article_9_1769587278.png" alt="Meta新AI实验室如何追赶OpenAI、谷歌?" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">Meta新AI实验室如何追赶OpenAI、谷歌?</h3>
+                    <p class="card-description">Meta通过激进组织重组、149亿美元收购Scale AI股份、聚焦智能体技术和世界模型来追赶OpenAI和谷歌。新任首席AI官Alexandr Wang领导新实验室，重点开发代号&#39;Mango&#39;的多模态图像视频模型和&#39;Avocado&#39;的文本LLM，目标在2026年上半年发布。</p>
+                    <div class="card-meta">
+                        <a href="http://m.toutiao.com/group/7597821987200729651/" target="_blank" class="card-source">来源: 头条热点解读</a>
+                        <span class="card-time">2026-01-21</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-category="company">
+                <img src="images/article_10_1769587279.png" alt="Amazon Launches Alexa+ on the Web: Its AI Assistant Breaks Free from Devices" class="card-image">
+                <div class="card-content">
+                    <span class="card-category company">大厂动态</span>
+                    <h3 class="card-title">Amazon Launches Alexa+ on the Web: Its AI Assistant Breaks Free from Devices</h3>
+                    <p class="card-description">亚马逊在CES 2026上推出Alexa+网页版，将AI助手从智能音箱扩展到浏览器。用户可通过Alexa.com访问，实现智能家居控制、文档分析、购物集成等功能。该服务为Prime会员免费，非会员月费19.99美元，标志着亚马逊AI助手战略的重大扩展。</p>
+                    <div class="card-meta">
+                        <a href="https://www.tech2geek.net/amazon-launches-alexa-on-the-web-its-ai-assistant-goes-beyond-smart-speakers/" target="_blank" class="card-source">来源: Tech2Geek</a>
+                        <span class="card-time">2026-01-06</span>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 AI资讯聚合 | 每日上午10:00自动更新</p>
+        <div class="footer-links">
+            <a href="#" onclick="showAll()">全部显示</a>
+            <a href="#" onclick="filterByCategory('model')">模型层</a>
+            <a href="#" onclick="filterByCategory('product')">产品层</a>
+            <a href="#" onclick="filterByCategory('company')">大厂动态</a>
+        </div>
+        <p>本页面内容由AI自动采集、整理和生成，仅提供信息参考，不构成投资建议。</p>
+    </footer>
+
+    <script>
+        function filterByCategory(category) {
+            const cards = document.querySelectorAll('.card');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            // 更新按钮状态
+            filterBtns.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.category === category) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // 显示/隐藏卡片
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function showAll() {
+            filterByCategory('all');
+        }
+        
+        // 初始化显示所有卡片
+        document.addEventListener('DOMContentLoaded', function() {
+            showAll();
+        });
+    </script>
+</body>
+</html>
